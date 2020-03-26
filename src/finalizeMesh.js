@@ -3,6 +3,7 @@ import { Matrix4, Vector3, Vector4 } from "three";
 let matrixRotation = new Matrix4().makeRotationX(90 * Math.PI / 180);
 let matrixScale = new Matrix4().makeScale(10, 10, 10);
 let vertex = new Vector3();
+let geometry;
 
 export function parse(mesh) {
   if (!mesh.isMesh) {
@@ -10,7 +11,7 @@ export function parse(mesh) {
     return;
   }
 
-  let geometry = mesh.geometry;
+  geometry = mesh.geometry;
 
   if (geometry.isBufferGeometry) {
     var newGeometry = geometry.clone(geometry);
@@ -51,7 +52,7 @@ export function parse(mesh) {
           }
 
           for (let j = 0; j < geometry.skinIndexNames.length; j++) {
-            newFunction_1(geometry, i, j, mesh, morphVector, finalVector);
+            newFunction_1(i, j, mesh, morphVector, finalVector);
           }
           newGeometry.attributes.position.setXYZ(i, finalVector.x, finalVector.y, finalVector.z);
         }
@@ -64,7 +65,7 @@ export function parse(mesh) {
   return newGeometry;
 }
 
-function newFunction_1(geometry, i, j, mesh, morphVector, finalVector) {
+function newFunction_1(i, j, mesh, morphVector, finalVector) {
   var skinIndices = geometry.getAttribute([geometry.skinIndexNames[j]]);
   var weights = geometry.getAttribute([geometry.skinWeightNames[j]]);
   var skinIndex = [];
@@ -88,11 +89,11 @@ function newFunction_1(geometry, i, j, mesh, morphVector, finalVector) {
   skinMatrices[2] = mesh.skeleton.bones[skinIndex[2]].matrixWorld;
   skinMatrices[3] = mesh.skeleton.bones[skinIndex[3]].matrixWorld;
   for (var k = 0; k < 4; k++) {
-    newFunction(geometry, morphVector, skinWeight, k, inverses, skinMatrices, finalVector);
+    newFunction(morphVector, skinWeight, k, inverses, skinMatrices, finalVector);
   }
 }
 
-function newFunction(geometry, morphVector, skinWeight, k, inverses, skinMatrices, finalVector) {
+function newFunction(morphVector, skinWeight, k, inverses, skinMatrices, finalVector) {
   var vectorToCopy = geometry.morphTargetInfluences !== undefined
     ? morphVector
     : vertex;

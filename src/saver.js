@@ -4,6 +4,7 @@ import { OBJExporter } from 'three/examples/jsm/exporters/OBJExporter.js';
 import { SubdivisionModifier } from 'three/examples/jsm/modifiers/SubdivisionModifier.js';
 import { saveAs } from 'file-saver';
 import jQuery from 'jquery';
+import { arrive } from 'arrive';
 import * as exporter from './finalizeMesh.js';
 
 function save_stl() {
