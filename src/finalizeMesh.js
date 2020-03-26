@@ -3,7 +3,6 @@ import { Matrix4, Vector3, Vector4 } from "three";
 let matrixRotation = new Matrix4().makeRotationX(90 * Math.PI / 180);
 let matrixScale = new Matrix4().makeScale(10, 10, 10);
 let vertex = new Vector3();
-let geometry = mesh.geometry;
 
 export function parse(mesh) {
   if (!mesh.isMesh) {
@@ -11,6 +10,7 @@ export function parse(mesh) {
     return;
   }
 
+  let geometry = mesh.geometry;
 
   if (geometry.isBufferGeometry) {
     var newGeometry = geometry.clone(geometry);
