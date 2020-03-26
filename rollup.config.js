@@ -1,6 +1,6 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import replace from 'rollup-plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
@@ -29,7 +29,6 @@ export default [
           booleans_as_integers: true,
           drop_console: true,
           hoist_funs: true,
-          hoist_vars: true,
           keep_fargs: false,
           toplevel: true,
           unsafe: true,
