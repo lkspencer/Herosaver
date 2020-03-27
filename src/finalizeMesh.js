@@ -38,6 +38,7 @@ export function parse(mesh) {
             .applyMatrix4(matrixScale);
           newGeometry.attributes.position.setXYZ(i, vertex.x, vertex.y, vertex.z);
         } else {
+          // TODO: does this line need the same condition as the ternary below?
           if (geometry.morphTargetInfluences !== undefined) {
             var morphVector = new Vector4(vertex.x, vertex.y, vertex.z);
             var tempMorph = new Vector4();
