@@ -52,6 +52,11 @@ export function parse(mesh) {
           }
 
           let finalVector = new Vector4();
+          if (geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0) {
+            console.log(`morphed: ${geometry.name}`);
+          } else {
+            console.log(`not morphed: ${geometry.name}`);
+          }
           for (let j = 0; j < geometry.skinIndexNames.length; j++) {
             //console.log(geometry.skinIndexNames)
             newFunction_1(i, j, mesh, morphVector, finalVector);
