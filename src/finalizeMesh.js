@@ -21,6 +21,11 @@ export function parse(mesh) {
     // vertices
     if (vertices !== undefined) {
       let verticesCount = vertices.count;
+      if (geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0) {
+        console.log(`morphed: ${geometry.name}`);
+      } else {
+        console.log(`not morphed: ${geometry.name}`);
+      }
       for (let i = 0; i < verticesCount; i++) {
         vertex.x = vertices.getX(i);
         vertex.y = vertices.getY(i);
@@ -52,11 +57,6 @@ export function parse(mesh) {
           }
 
           let finalVector = new Vector4();
-          if (geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0) {
-            console.log(`morphed: ${geometry.name}`);
-          } else {
-            console.log(`not morphed: ${geometry.name}`);
-          }
           for (let j = 0; j < geometry.skinIndexNames.length; j++) {
             //console.log(geometry.skinIndexNames)
             newFunction_1(i, j, mesh, morphVector, finalVector);
@@ -110,9 +110,10 @@ function newFunction_1(i, j, mesh, morphVector, finalVector) {
 }
 
 function newFunction(morphVector, finalVector, skinWeight, inverses, skinMatrices, k) {
-  var vectorToCopy = geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0
-    ? morphVector
-    : vertex;
+  //var vectorToCopy = geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0
+  //  ? morphVector
+  //  : vertex;
+  var vectorToCopy = vertex;
   var tempVector = new Vector4(vectorToCopy.x, vectorToCopy.y, vectorToCopy.z)
   tempVector.multiplyScalar(skinWeight[k]);
   //the inverse takes the vector into local bone space
