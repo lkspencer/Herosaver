@@ -3,13 +3,16 @@ import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
+import { v4 as uuidv4 } from 'uuid';
+
+let fileName = pkg.browser.replace('[hash]', uuidv4());
 
 export default [
   {
     input: 'src/saver.js',
     output: {
       name: 'saver',
-      file: pkg.browser,
+      file: fileName,
       format: 'umd'
     },
     plugins: [
