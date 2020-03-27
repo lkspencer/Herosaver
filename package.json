@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./dist",
-    "pre:build": "npm run clean",
+    "prebuild": "npm run clean",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "pretest": "npm run build"

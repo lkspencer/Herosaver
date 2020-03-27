@@ -11,6 +11,7 @@ export function parse(mesh) {
     return;
   }
 
+  debugger;
   geometry = mesh.geometry;
 
   if (geometry.isBufferGeometry) {
@@ -32,7 +33,6 @@ export function parse(mesh) {
             .applyMatrix4(matrixScale);
           newGeometry.attributes.position.setXYZ(i, vertex.x, vertex.y, vertex.z);
         } else {
-          var finalVector = new Vector4();
           if (geometry.morphTargetInfluences !== undefined) {
             var morphVector = new Vector4(vertex.x, vertex.y, vertex.z);
             var tempMorph = new Vector4();
@@ -51,7 +51,9 @@ export function parse(mesh) {
             morphVector.add(tempMorph);
           }
 
+          let finalVector = new Vector4();
           for (let j = 0; j < geometry.skinIndexNames.length; j++) {
+            //console.log(geometry.skinIndexNames)
             newFunction_1(i, j, mesh, morphVector, finalVector);
           }
           newGeometry.attributes.position.setXYZ(i, finalVector.x, finalVector.y, finalVector.z);
@@ -68,33 +70,42 @@ export function parse(mesh) {
 function newFunction_1(i, j, mesh, morphVector, finalVector) {
   var skinIndices = geometry.getAttribute([geometry.skinIndexNames[j]]);
   var weights = geometry.getAttribute([geometry.skinWeightNames[j]]);
-  var skinIndex = [];
-  skinIndex[0] = skinIndices.getX(i);
-  skinIndex[1] = skinIndices.getY(i);
-  skinIndex[2] = skinIndices.getZ(i);
-  skinIndex[3] = skinIndices.getW(i);
-  var skinWeight = [];
-  skinWeight[0] = weights.getX(i);
-  skinWeight[1] = weights.getY(i);
-  skinWeight[2] = weights.getZ(i);
-  skinWeight[3] = weights.getW(i);
-  var inverses = [];
-  inverses[0] = mesh.skeleton.boneInverses[skinIndex[0]];
-  inverses[1] = mesh.skeleton.boneInverses[skinIndex[1]];
-  inverses[2] = mesh.skeleton.boneInverses[skinIndex[2]];
-  inverses[3] = mesh.skeleton.boneInverses[skinIndex[3]];
-  var skinMatrices = [];
-  skinMatrices[0] = mesh.skeleton.bones[skinIndex[0]].matrixWorld;
-  skinMatrices[1] = mesh.skeleton.bones[skinIndex[1]].matrixWorld;
-  skinMatrices[2] = mesh.skeleton.bones[skinIndex[2]].matrixWorld;
-  skinMatrices[3] = mesh.skeleton.bones[skinIndex[3]].matrixWorld;
+
+  var skinIndex = [
+    skinIndices.getX(i),
+    skinIndices.getY(i),
+    skinIndices.getZ(i),
+    skinIndices.getW(i)
+  ];
+
+  var skinWeight = [
+    weights.getX(i),
+    weights.getY(i),
+    weights.getZ(i),
+    weights.getW(i)
+  ];
+
+  var inverses = [
+    mesh.skeleton.boneInverses[skinIndex[0]],
+    mesh.skeleton.boneInverses[skinIndex[1]],
+    mesh.skeleton.boneInverses[skinIndex[2]],
+    mesh.skeleton.boneInverses[skinIndex[3]]
+  ];
+
+  var skinMatrices = [
+    mesh.skeleton.bones[skinIndex[0]].matrixWorld,
+    mesh.skeleton.bones[skinIndex[1]].matrixWorld,
+    mesh.skeleton.bones[skinIndex[2]].matrixWorld,
+    mesh.skeleton.bones[skinIndex[3]].matrixWorld
+  ];
+
   for (var k = 0; k < 4; k++) {
-    newFunction(morphVector, skinWeight, k, inverses, skinMatrices, finalVector);
+    newFunction(morphVector, finalVector, skinWeight, inverses, skinMatrices, k);
   }
 }
 
-function newFunction(morphVector, skinWeight, k, inverses, skinMatrices, finalVector) {
-  var vectorToCopy = geometry.morphTargetInfluences !== undefined
+function newFunction(morphVector, finalVector, skinWeight, inverses, skinMatrices, k) {
+  var vectorToCopy = geometry.morphTargetInfluences !== undefined && geometry.morphTargetInfluences.reduce((p, c) => p + c) > 0
     ? morphVector
     : vertex;
   var tempVector = new Vector4(vectorToCopy.x, vectorToCopy.y, vectorToCopy.z)

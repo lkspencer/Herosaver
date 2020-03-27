@@ -27,7 +27,7 @@ export default [
         compress: {
           arguments: true,
           booleans_as_integers: true,
-          drop_console: true,
+          drop_console: false,
           hoist_funs: true,
           keep_fargs: false,
           toplevel: true,
